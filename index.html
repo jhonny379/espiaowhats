@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatório de WhatsApp</title>
+    <style>
+        /* Adicionando o mesmo estilo que já foi fornecido anteriormente */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #e8f5e9;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        header {
+            background-color: #2e7d32;
+            color: #fff;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        header img {
+            height: 40px;
+        }
+
+        header .online-users {
+            font-size: 14px;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            box-sizing: border-box;
+            border: 2px solid #4caf50;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #2e7d32;
+        }
+
+        p {
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+        input[type="tel"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #81c784;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+
+        input[type="tel"]:focus {
+            border-color: #2e7d32;
+            outline: none;
+        }
+
+        button {
+            padding: 12px 20px;
+            background-color: #2e7d32;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+
+        button:hover {
+            background-color: #1b5e20;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        #progressContainer {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        #progressBar {
+            width: 100%;
+            padding: 5px;
+            background-color: #c8e6c9;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        #progress {
+            height: 20px;
+            width: 0;
+            background-color: #4caf50;
+            transition: width 0.3s;
+        }
+
+        #progressText {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #fff;
+            font-weight: bold;
+        }
+
+        #loadingImage {
+            width: 50px;
+            height: 50px;
+            margin-top: 10px;
+        }
+
+        #scannerInfo {
+            margin-top: 15px;
+            font-size: 16px;
+            color: #333;
+        }
+
+        #scannerInfo p {
+            margin: 5px 0;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .pulsate {
+            animation: pulsate 1.5s infinite;
+        }
+
+        @keyframes pulsate {
+            0% {
+                color: #333;
+            }
+            50% {
+                color: #2e7d32;
+            }
+            100% {
+                color: #333;
+            }
+        }
+
+        #paymentMessage {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #c8e6c9;
+            border: 1px solid #81c784;
+            border-radius: 8px;
+            color: #1b5e20;
+            font-size: 16px;
+        }
+
+        #reportPhotos {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        #reportPhotos img {
+            border-radius: 8px;
+            max-width: 100%;
+            height: auto;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 22px;
+            }
+
+            p, input[type="tel"], button {
+                font-size: 14px;
+            }
+
+            button {
+                padding: 10px 18px;
+            }
+
+            #progressBar {
+                height: 18px;
+            }
+
+            #progress {
+                height: 18px;
+            }
+
+            #reportPhotos img {
+                width: calc(50% - 10px);
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 20px;
+            }
+
+            p, input[type="tel"], button {
+                font-size: 12px;
+            }
+
+            button {
+                padding: 8px 14px;
+            }
+
+            #progressBar {
+                height: 14px;
+            }
+
+            #progress {
+                height: 14px;
+            }
+
+            #reportPhotos img {
+                width: calc(100% - 10px);
+            }
+        }
+
+        .botao-brilhante {
+            display: inline-block;
+            padding: 12px 24px;
+            border: 2px solid #2e7d32;
+            border-radius: 8px;
+            background-color: #2e7d32;
+            color: #fff;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: background-color 0.3s, box-shadow 0.3s;
+            animation: pulse 2s infinite; /* Animação contínua */
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 rgba(76, 175, 80, 0.5);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 0 15px rgba(76, 175, 80, 0.5);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 rgba(76, 175, 80, 0.5);
+            }
+        }
+
+        .botao-brilhante:hover {
+            background-color: #1b5e20;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .botao-brilhante span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .fotoZAP {
+            border: solid 1px #4caf50;
+        }
+    </style>
+</head>
+<body>
+    <header id="cabeca">
+        <img src="https://i.imgur.com/9Nt0FdZ.png" alt="Logo">
+        <div class="online-users">
+            <p>Usuários Online: <span id="onlineUsersCount">0</span></p>
+        </div>
+    </header>
+    <div class="container">
+        <center>
+            <img id="introImage" src="https://clonapps.com/wp-content/uploads/2024/01/ESPIAO-OFICIAL.jpg" width="300px" height="auto" alt="Imagem de Introdução">
+        </center>
+        <h1 id="reportTitle">Acessar Conversas WhatsApp</h1>
+        <p id="reportSubtitle"><b>Informe o número do WhatsApp para começar:</b></p>
+        <form id="reportForm">
+            <input type="tel" id="whatsappNumber" name="whatsappNumber" placeholder="Número do WhatsApp (Clique aqui)" required>
+            <button type="submit" id="generateReport">Espionar WhatsApp</button>
+        </form>
+        <div id="progressContainer" class="hidden">
+            <p><b>Carregando conversas...</b></p>
+            <div id="progressBar">
+                <div id="progress"></div>
+                <div id="progressText">0%</div>
+            </div>
+            <img id="loadingImage" src="https://cliply.co/wp-content/uploads/2021/08/372108180_WHATSAPP_ICON_400.gif" alt="Loading">
+            <div id="scannerInfo">
+                <p><span id="photosFound">Fotos encontradas: 0</span></p>
+                <p><span id="messagesFound">Mensagens encontradas: 0</span></p>
+                <p><span id="audioMessagesFound">Mensagens de áudio encontradas: 0</span></p>
+            </div>
+        </div>
+        <div id="reportOutput" class="hidden">
+			<div id="paymentMessage" class="hidden">
+            <p><b>Relatório gerado com sucesso! Clique para baixar e visualizar uma prévia agora mesmo.</b></p>
+			<a href="overload.html" class="botao-brilhante" id="downloadButton"><span>Ver Agora</span></a>
+        </div>
+		<p><b>Fotos encontradas:</b> <span id="finalPhotosCount">0</span></p>
+            <p><b>Mensagens encontradas:</b> <span id="finalMessagesCount">0</span></p>
+            <p><b>Mensagens de áudio encontradas:</b> <span id="finalAudioMessagesCount">0</span></p>
+            <div id="reportPhotos"></div>
+            
+        </div>
+        
+    </div>
+
+    <script>
+        function showOverloadMessage() {
+            alert("Muitos dados encontrados, o servidor está sobrecarregado. Desbloqueie agora para ver todos os dados encontrados!");
+        }
+
+        function formatPhoneNumber(number) {
+            // Remove todos os caracteres que não são dígitos
+            number = number.replace(/\D/g, '');
+            // Formata o número de telefone
+            return number.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+        }
+
+        function getUniqueRandomNumbers(count, min, max) {
+            const numbers = new Set();
+            while (numbers.size < count) {
+                const num = Math.floor(Math.random() * (max - min + 1)) + min;
+                numbers.add(num);
+            }
+            return Array.from(numbers);
+        }
+
+        function getRandomNumber(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function startReportGeneration() {
+            // Gerar três números únicos entre 11 e 199
+            const [photosCount, messagesCount, audioMessagesCount] = getUniqueRandomNumbers(3, 11, 199);
+            // Gerar número de usuários online entre 120 e 866
+            const onlineUsersCount = getRandomNumber(120, 866);
+
+            // Atualizar o número de usuários online
+            document.getElementById('onlineUsersCount').textContent = onlineUsersCount;
+
+            document.getElementById('progressContainer').classList.remove('hidden');
+            document.getElementById('reportOutput').classList.add('hidden');
+            document.getElementById('paymentMessage').classList.add('hidden');
+
+            document.getElementById('reportTitle').classList.add('hidden');
+            document.getElementById('reportSubtitle').classList.add('hidden');
+            document.getElementById('whatsappNumber').classList.add('hidden');
+            document.getElementById('generateReport').classList.add('hidden');
+            document.getElementById('introImage').classList.add('hidden');
+
+            let width = 0;
+            const interval = 100;
+            const duration = 15000;
+            const step = 100 / (duration / interval);
+
+            const progressInterval = setInterval(() => {
+                width += step;
+                if (width >= 100) {
+                    width = 100;
+                    clearInterval(progressInterval);
+                    setTimeout(() => {
+                        showReport(photosCount, messagesCount, audioMessagesCount);
+                        document.getElementById('paymentMessage').classList.remove('hidden');
+                    }, 500);
+                }
+                document.getElementById('progress').style.width = width + '%';
+                document.getElementById('progressText').textContent = Math.round(width) + '%';
+
+                if (width % 20 === 0) {
+                    document.getElementById('photosFound').textContent = `Fotos encontradas: ${photosCount}`;
+                    document.getElementById('messagesFound').textContent = `Mensagens encontradas: ${messagesCount}`;
+                    document.getElementById('audioMessagesFound').textContent = `Mensagens de áudio encontradas: ${audioMessagesCount}`;
+                }
+            }, interval);
+
+            setTimeout(() => {
+                document.getElementById('introImage').classList.add('hidden');
+                document.getElementById('progressContainer').classList.add('hidden');
+                document.getElementById('loadingImage').classList.add('hidden');
+                document.getElementById('scannerInfo').classList.add('hidden');
+            }, duration);
+        }
+
+        function showReport(photosCount, messagesCount, audioMessagesCount) {
+            const reportPhotos = document.getElementById('reportPhotos');
+            reportPhotos.innerHTML = `
+                <a href="#paymentMessage"><img src="https://i.imgur.com/lzuNObt.png" class="fotoZAP" width="100px" height="auto" alt="Foto Exemplo"></a>
+                <a href="#paymentMessage"><img src="https://i.imgur.com/lzuNObt.png" class="fotoZAP" width="100px" height="auto" alt="Foto Exemplo"></a>
+                <a href="#paymentMessage"><img src="https://i.imgur.com/lzuNObt.png" class="fotoZAP" width="100px" height="auto" alt="Foto Exemplo"></a>
+            `;
+
+            document.getElementById('finalPhotosCount').textContent = photosCount;
+            document.getElementById('finalMessagesCount').textContent = messagesCount;
+            document.getElementById('finalAudioMessagesCount').textContent = audioMessagesCount;
+
+            document.getElementById('reportOutput').classList.remove('hidden');
+        }
+
+        document.getElementById('reportForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Evita o envio do formulário
+            startReportGeneration();
+        });
+
+        // Inicializa o número de usuários online
+        document.getElementById('onlineUsersCount').textContent = getRandomNumber(120, 866);
+
+        // Adiciona o evento de formatação ao campo de número
+        document.getElementById('whatsappNumber').addEventListener('input', function() {
+            const formattedNumber = formatPhoneNumber(this.value);
+            this.value = formattedNumber;
+        });
+    </script>
+</body>
+</html>
